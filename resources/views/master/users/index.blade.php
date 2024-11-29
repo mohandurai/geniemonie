@@ -134,6 +134,8 @@
                             </tbody>
                         </table>
 
+                        {!! $users->links() !!}
+
                     </div>
 
                 </div>
@@ -147,3 +149,62 @@
 
 @endsection
 
+@push('styles')
+    <!--begin::Page Vendors Styles(used by this page)-->
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+@endpush
+@push('scripts')
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#kt_datatable').DataTable({
+                searching: false, paging: false, info: false, ordering: false,
+            });
+        });
+
+
+        $('#delete-user').on('click', function (e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    swalWithBootstrapButtons.fire(
+                        'Deleted!',
+                        'Record has been deleted.',
+                        'success'
+                    )
+                    setTimeout(function () {
+                    $('#delete-post-form').submit();
+                    }, 800);
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your Record is safe :)',
+                        'error'
+                    )
+                }
+            });
+        });
+
+    </script>
+@endpush

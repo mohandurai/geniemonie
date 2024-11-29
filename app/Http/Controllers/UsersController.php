@@ -21,7 +21,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
+        // $users = User::paginate(10);
+        $users = User::orderBy('id', 'DESC')->paginate(10);
         return view('master.users.index')->with(compact('users'));
     }
 
